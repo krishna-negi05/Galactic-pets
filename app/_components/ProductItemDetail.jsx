@@ -9,13 +9,14 @@ import { toast } from 'sonner';
 import { UpdateCart } from '../_context/UpdateCart';
 
 function ProductItemDetail({ product }) {
-  const jwt = localStorageStorage.getItem('jwt');
+  const jwt = localStorage.getItem('jwt');  // Fixed the typo here
   const [Quantity, setQuantity] = useState(1);
   const router = useRouter();
-  const {updateCart,setUpdateCart}=useContext(UpdateCart)
+  const { updateCart, setUpdateCart } = useContext(UpdateCart);
   const user = JSON.parse(localStorage.getItem('user'));
   const productTotalPrice = product.sellingprice ? product.sellingprice : product.mrp;
-  
+
+  // Redirect to sign-in if not logged in or if user data is missing
   if (!jwt || !user) {
     router.push('/sign-in');
     return null;
@@ -26,7 +27,7 @@ function ProductItemDetail({ product }) {
       router.push('/sign-in');
       return;
     }
-  
+
     const data = {
       data: {
         quantity: Quantity,
@@ -36,9 +37,9 @@ function ProductItemDetail({ product }) {
         userId: user.id,
       },
     };
-  
+
     const toastId = toast.loading('Adding to Cart...'); // Show loading message
-  
+
     GlobalApi.addToCart(data, jwt)
       .then((resp) => {
         console.log(resp);
@@ -51,7 +52,7 @@ function ProductItemDetail({ product }) {
         toast.error(errorMessage, { id: toastId }); // Update the loading toast to error
       });
   };
-  
+
   return (
     <div className="flex flex-col md:flex-row gap-4 items-center">
       <div className="flex-shrink-0">
@@ -91,7 +92,8 @@ function ProductItemDetail({ product }) {
               +
             </button>
           </div>
-          <h2 className='text-md font-bold'>=</h2><h2 className="text-green-600 text-3xl font-bold"> ₹ {Quantity * productTotalPrice}</h2>
+          <h2 className='text-md font-bold'>=</h2>
+          <h2 className="text-green-600 text-3xl font-bold"> ₹ {Quantity * productTotalPrice}</h2>
         </div>
 
         <Button className="flex gap-3 items-center" onClick={addToCart}>

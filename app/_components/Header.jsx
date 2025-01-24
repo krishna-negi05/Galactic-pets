@@ -1,19 +1,19 @@
-"use client"
-import { Button } from '@/components/ui/button'
-import { CircleUserRoundIcon, LayoutGrid, Search, ShoppingBag } from 'lucide-react'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+"use client";
+import { Button } from '@/components/ui/button';
+import { CircleUserRoundIcon, LayoutGrid, Search, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import GlobalApi from '../_utils/GlobalApi'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import GlobalApi from '../_utils/GlobalApi';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useContext } from "react";
 import { UpdateCart } from "../_context/UpdateCart";
 import {
@@ -23,25 +23,23 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import CartItemList from './CartItemList'
-
+} from "@/components/ui/sheet";
+import CartItemList from './CartItemList';
 
 function Header() {
   const [CategoryList, setCategoryList] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
-  const {updateCart,setUpdateCart}=useContext(UpdateCart)
+  const { updateCart, setUpdateCart } = useContext(UpdateCart);
   const [isAccountCreated, setIsAccountCreated] = useState(false); // State for checking if the user has created an account
   const router = useRouter();
-  const [totalCartItem,setTotalCartItem]=useState(0)
-  const [cartItemList,setCartItemList]=useState([])
+  const [totalCartItem, setTotalCartItem] = useState(0);
+  const [cartItemList, setCartItemList] = useState([]);
 
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
-    const userCreated = localStorage.getItem('userCreated'); // Check if user has created an account (store in session)
+    const userCreated = localStorage.getItem('userCreated'); 
     setIsLogin(!!jwt);
-    setIsAccountCreated(!!userCreated); // Set the state based on user creation
-    getCategoryList();
+    setIsAccountCreated(!!userCreated); 
   }, []);
 
   const onSignOut = () => {
@@ -54,16 +52,15 @@ function Header() {
       setCategoryList(resp.data.data);
     });
   };
+
   useEffect(() => {
-    // Get JWT and user data inside useEffect
     const jwt = localStorage.getItem('jwt');
     const user = JSON.parse(localStorage.getItem('user'));
   
     if (jwt && user) {
-      getCartItems(user.id, jwt); // Call getCartItems with user id and jwt
+      getCartItems(user.id, jwt);
     }
-  }, [updateCart]); // Only re-run when updateCart changes
-  
+  }, [updateCart]); 
   const getCartItems = async (userId, jwt) => {
     try {
       const cartItemList_ = await GlobalApi.getCartItems(userId, jwt);
@@ -118,21 +115,23 @@ function Header() {
       
       <div className='flex gap-5 items-center'>
         <Sheet>
-  <SheetTrigger><h2 className='flex gap-1 items-center text-lg'>
-          <ShoppingBag/><span className='bg-yellow-500 text-white px-2 rounded-full'>
-            {totalCartItem}
-            </span> 
-        </h2></SheetTrigger>
-  <SheetContent>
-    <SheetHeader>
-      <SheetTitle className='bg-blue-300 font-bold text-lg text-white p-2'>My Cart</SheetTitle>
-      <SheetDescription>
-        <CartItemList cartItemList={cartItemList}/>
-      </SheetDescription>
-    </SheetHeader>
-  </SheetContent>
-</Sheet>
-
+          <SheetTrigger>
+            <h2 className='flex gap-1 items-center text-lg'>
+              <ShoppingBag />
+              <span className='bg-yellow-500 text-white px-2 rounded-full'>
+                {totalCartItem}
+              </span>
+            </h2>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle className='bg-blue-300 font-bold text-lg text-white p-2'>My Cart</SheetTitle>
+              <SheetDescription>
+                <CartItemList cartItemList={cartItemList} />
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
 
         {!isLogin ? (
           <Link href={'/sign-in'}>

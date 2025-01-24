@@ -13,6 +13,7 @@ function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
   const onCreateAccount = () => {
     if (!username || !email || !password) {
       console.error('All fields are required!');
@@ -25,12 +26,11 @@ function CreateAccount() {
         console.log('JWT:', resp.data.jwt);
         localStorage.setItem("user", JSON.stringify(resp.data.user)); // Save user info in localStorage
         localStorage.setItem("jwt", resp.data.jwt); // Save JWT in localStorage
-        toast('Account created successfully')
+        toast('Account created successfully');
         router.push('/');
-      },(e)=>{
-        toast("Account exists")
-      }
-    )
+      }, (e) => {
+        toast("Account exists");
+      })
       .catch((error) => {
         console.error('Error creating account:', error);
       });
